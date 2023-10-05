@@ -1,0 +1,36 @@
+diff --git a/arch/arm/boot/dts/stm32mp157d-atk.dts b/arch/arm/boot/dts/stm32mp157d-atk.dts
+index a4f922f35..a885cd505 100644
+--- a/arch/arm/boot/dts/stm32mp157d-atk.dts
++++ b/arch/arm/boot/dts/stm32mp157d-atk.dts
+@@ -37,6 +37,12 @@
+ 			no-map;
+ 		};
+ 	};
++
++	beep {
++		compatible = "alientek,beep";
++		status = "okay";
++		beep-gpio = <&gpioc 7 GPIO_ACTIVE_HIGH>;
++	};
+ };
+ 
+ &cpu1 {
+diff --git a/arch/arm/boot/dts/stm32mp157d-atk.dtsi b/arch/arm/boot/dts/stm32mp157d-atk.dtsi
+index b11f359cf..30a516192 100644
+--- a/arch/arm/boot/dts/stm32mp157d-atk.dtsi
++++ b/arch/arm/boot/dts/stm32mp157d-atk.dtsi
+@@ -117,12 +117,13 @@
+ 			default-state = "on";
+ 			status = "okay";
+ 		};
+-
++#if 0
+ 		beep {
+ 			label = "beep";
+ 			gpios = <&gpioc 7 GPIO_ACTIVE_LOW>;
+ 			default-state = "off";
+ 		};
++#endif
+ 	 };
+ 
+ 	panel_backlight: panel-backlight {
