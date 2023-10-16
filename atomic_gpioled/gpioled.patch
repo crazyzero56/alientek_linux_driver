@@ -1,0 +1,39 @@
+diff --git a/arch/arm/boot/dts/stm32mp157d-atk.dts b/arch/arm/boot/dts/stm32mp157d-atk.dts
+index a2f6b45c0..ffb422838 100644
+--- a/arch/arm/boot/dts/stm32mp157d-atk.dts
++++ b/arch/arm/boot/dts/stm32mp157d-atk.dts
+@@ -37,6 +37,12 @@
+ 			no-map;
+         };
+ 	};
++
++	gpioled {
++		compatible = "alientek, led";
++		status = "okay";
++		led-gpio = <&gpioi 0 GPIO_ACTIVE_LOW>;
++	};
+ };
+ 
+ &cpu1 {
+diff --git a/arch/arm/boot/dts/stm32mp157d-atk.dtsi b/arch/arm/boot/dts/stm32mp157d-atk.dtsi
+index 61ffe4630..e0b558bcf 100644
+--- a/arch/arm/boot/dts/stm32mp157d-atk.dtsi
++++ b/arch/arm/boot/dts/stm32mp157d-atk.dtsi
+@@ -101,7 +101,7 @@
+ 
+     leds {
+          compatible = "gpio-leds";
+-
++/*
+          led1 {
+              label = "sys-led";
+              gpios = <&gpioi 0 GPIO_ACTIVE_LOW>;
+@@ -109,7 +109,7 @@
+              default-state = "on";
+              status = "okay";
+          };
+-
++*/
+          led2 {
+              label = "user-led";
+              gpios = <&gpiof 3 GPIO_ACTIVE_LOW>;
