@@ -86,17 +86,29 @@ static ssize_t led_write(
 	unsigned char databuf[1];
 	unsigned char ledstat;
 	struct gpioled_dev *dev = file->private_data;
+
+	if ((sizeof(databuf) / sizeof(unsigned char)) < cnt) {
+		printk("error : input data size greater than buffer!!\r\n");
+		return -EFAULT;
+	}
+
 	retvalue = copy_from_user(databuf, buff, cnt);
 	if (retvalue < 0) {
 		printk("kernel write failed!\r\n");
 		return -EFAULT;
 	}
-	ledstat = databuf[0];
 
-	if (ledstat == LEDON) {
+	ledstat = databuf[0];
+	switch (ledstat) {
+	case LEDON:
 		gpio_set_value(dev->led_gpio, 0);
-	} else if (ledstat == LEDOFF) {
+		break;
+	case LEDOFF:
 		gpio_set_value(dev->led_gpio, 1);
+		break;
+	default:
+		printk("command value not define, do noting! \r\n");
+		break;
 	}
 
 	return 0;
