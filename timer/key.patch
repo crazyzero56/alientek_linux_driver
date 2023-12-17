@@ -1,0 +1,62 @@
+diff --git a/arch/arm/boot/dts/stm32mp157d-atk.dts b/arch/arm/boot/dts/stm32mp157d-atk.dts
+index a4f922f35..4d52a5d6e 100644
+--- a/arch/arm/boot/dts/stm32mp157d-atk.dts
++++ b/arch/arm/boot/dts/stm32mp157d-atk.dts
+@@ -37,6 +37,20 @@
+ 			no-map;
+ 		};
+ 	};
++
++	key {
++		compatible = "alientek,key";
++		status = "okay";
++		key-gpio = <&gpiog 3 GPIO_ACTIVE_LOW>;
++		// interrupt-parent = <&gpiog>;
++		// interrupts = <3 IRQ_TYPE_EDGE_BOTH>;
++	};
++
++	gpioled {
++		compatible = "alientek, led";
++		status = "okay";
++		led-gpio = <&gpioi 0 GPIO_ACTIVE_LOW>;
++	};
+ };
+
+ &cpu1 {
+diff --git a/arch/arm/boot/dts/stm32mp157d-atk.dtsi b/arch/arm/boot/dts/stm32mp157d-atk.dtsi
+index b11f359cf..cdb13c1d1 100644
+--- a/arch/arm/boot/dts/stm32mp157d-atk.dtsi
++++ b/arch/arm/boot/dts/stm32mp157d-atk.dtsi
+@@ -80,12 +80,14 @@
+ 	gpio-keys {
+ 			compatible = "gpio-keys";
+ 			autorepeat;
++/*
+ 			key0 {
+ 				label = "USER-KEY0";
+ 				linux,code = <114>;
+ 				gpios = <&gpiog 3 GPIO_ACTIVE_LOW>;
+ 				gpio-key,wakeup;
+ 			};
++*/
+
+ 			key1 {
+ 				label = "USER-KEY1";
+@@ -101,7 +103,7 @@
+
+ 	leds {
+ 		 compatible = "gpio-leds";
+-
++/*
+ 		led1 {
+ 			label = "sys-led";
+ 			gpios = <&gpioi 0 GPIO_ACTIVE_LOW>;
+@@ -109,7 +111,7 @@
+ 			default-state = "on";
+ 			status = "okay";
+ 		};
+-
++*/
+ 		led2 {
+ 			label = "user-led";
+ 			gpios = <&gpiof 3 GPIO_ACTIVE_LOW>;
