@@ -21,3 +21,5 @@ alientek_linux_driver
    * Trigger gpio led, handling race condation by mutex.
 10. timer
    * Gpio twinkling frequency controll by timer.
+11. blockio
+   * Base on keyirq, use wait queue API instead of spinlock. CPU usage is decrease.
