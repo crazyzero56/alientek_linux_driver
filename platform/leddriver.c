@@ -25,6 +25,12 @@
 #define LEDDEV_NAME "platled"
 #define LEDOFF 0
 #define LEDON 1
+#if defined(USE_ODR)
+static void __iomem *GPIOI_ODR_PI;
+#define REQ_SIZE 7
+#else
+#define REQ_SIZE 6
+#endif
 
 static void __iomem *MPU_AHB4_PERIPH_RCC_PI;
 static void __iomem *GPIOI_MODER_PI;
@@ -46,7 +52,21 @@ struct gpioled_dev
 	atomic_t lock;
 };
 struct gpioled_dev leddev;
+#if defined(USE_ODR)
+void led_switch(u8 sta)
+{
+	u32 val =0;
 
+	val = readl(GPIOI_ODR_PI);
+	if (sta == LEDON){
+		val |= (1 << 0);
+		writel(val,GPIOI_ODR_PI);
+	}else if (sta == LEDOFF){
+		val &= ~(1 << 0);
+		writel(val,GPIOI_ODR_PI);
+	}
+}
+#else
 void led_switch(u8 sta)
 {
 	u32 val =0;
@@ -61,7 +81,7 @@ void led_switch(u8 sta)
 	}
 
 }
-
+#endif
 static int led_open(struct inode *inode, struct file *filp)
 {
 	return 0;
@@ -74,6 +94,9 @@ static void led_unmap(void)
 	iounmap(GPIOI_OTYPER_PI);
 	iounmap(GPIOI_OSPEEDR_PI);
 	iounmap(GPIOI_PUPDR_PI);
+#if defined(USE_ODR)
+	iounmap(GPIOI_ODR_PI);
+#endif
 	iounmap(GPIOI_BSRR_PI);
 }
 
@@ -114,22 +137,23 @@ static struct file_operations gpioled_fops = {
 
 static int led_probe(struct platform_device *dev)
 {
-	struct resource *led_resource[6];
-	int ressize[6];
+	struct resource *led_resource[REQ_SIZE];
+	int ressize[REQ_SIZE];
 	u32 val = 0;
 	int ret = 0;
 	int it = 0;
 
 	printk("led driver and device has matched !\n");
-	for (it = 0; it < 6; it++)
+	for (it = 0; it < REQ_SIZE; it++)
 	{
 		led_resource[it] = platform_get_resource(dev, IORESOURCE_MEM, it);
 		if (!led_resource[it])
 		{
-			dev_err(&dev->dev, "No MEM resource for always on\n");
+			dev_err(&dev->dev, "No MEM resource for always on : %d\n",it);
 			return -ENXIO;
 		}
 		ressize[it] = resource_size(led_resource[it]);
+		dev_err(&dev->dev, "assigned ressize[%d] \n",it);
 	}
 
 	MPU_AHB4_PERIPH_RCC_PI = ioremap(led_resource[0]->start, ressize[0]);
@@ -138,6 +162,9 @@ static int led_probe(struct platform_device *dev)
 	GPIOI_OSPEEDR_PI = ioremap(led_resource[3]->start, ressize[3]);
 	GPIOI_PUPDR_PI = ioremap(led_resource[4]->start, ressize[4]);
 	GPIOI_BSRR_PI = ioremap(led_resource[5]->start, ressize[5]);
+#if defined(USE_ODR)
+	GPIOI_ODR_PI = ioremap(led_resource[6]->start, ressize[6]);
+#endif
 
 	/* config the gpio led. See more detail in data sheet. */
 
@@ -174,6 +201,14 @@ static int led_probe(struct platform_device *dev)
 	val = readl(GPIOI_BSRR_PI);
 	val |= (0x1 << 0);
 	writel(val, GPIOI_BSRR_PI);
+
+#if defined(USE_ODR)
+	/* seting GPIOI_ODR_PI0 low */
+	val = readl(GPIOI_ODR_PI);
+	printk("GPIOI_ODR_PI val : 0x%x\n",val);
+	val &= ~(0x1 << 0);
+	writel(val, GPIOI_ODR_PI);
+#endif
 
 	if (leddev.major)
 	{

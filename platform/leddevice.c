@@ -18,6 +18,7 @@
 #define GPIOI_OTYPER (GPIOI_BASE + 0x0004)
 #define GPIOI_OSPEEDR (GPIOI_BASE + 0x0008)
 #define GPIOI_PUPDR (GPIOI_BASE + 0x000C)
+#define GPIOI_ODR (GPIOI_BASE + 0x0014)
 #define GPIOI_BSRR (GPIOI_BASE + 0x0018)
 #define REGISTER_LENGTH 4
 
@@ -57,6 +58,13 @@ struct resource led_resources[] = {
 		.end = (GPIOI_BSRR + REGISTER_LENGTH - 1),
 		.flags = IORESOURCE_MEM,
 	},
+#if defined(USE_ODR)
+	[6] = {
+		.start = GPIOI_ODR,
+		.end = (GPIOI_ODR + REGISTER_LENGTH - 1),
+		.flags = IORESOURCE_MEM,
+	},
+#endif
 };
 
 static struct platform_device leddevice = {

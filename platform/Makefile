@@ -8,6 +8,8 @@ APP_TARGET = $(APP_NAME:.c=)
 
 obj-m := leddevice.o
 obj-m += leddriver.o
+ccflags-y := -DUSE_ODR
+
 target = $(patsubst %.o,%.ko, $(obj-m))
 targetdis = $(patsubst %.ko,%.dis, $(target))
 
