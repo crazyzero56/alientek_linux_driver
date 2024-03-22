@@ -3,7 +3,7 @@ TOOLCHAIN := ~/work/C_workspace/toolchain/gcc-arm-9.2-2019.12-x86_64-arm-none-li
 CURRENT_PATH := $(shell pwd)
 NFS_PATH := /home/davidhsieh/work/linux/nfs/rootfs/lib/modules
 
-#APP_NAME := blockApp.c
+APP_NAME := ledApp.c
 APP_TARGET = $(APP_NAME:.c=)
 
 obj-m := leddevice.o
@@ -11,8 +11,8 @@ obj-m += leddriver.o
 target = $(patsubst %.o,%.ko, $(obj-m))
 targetdis = $(patsubst %.ko,%.dis, $(target))
 
-all: kernel_modules install #app
-#all: kernel_modules
+all: kernel_modules install app
+
 kernel_modules:
 	@$(MAKE) -C $(KERNELDIR) M=$(CURRENT_PATH) modules
 	@echo "$(target)"
@@ -20,8 +20,8 @@ kernel_modules:
 	@$(TOOLCHAIN)objdump -dS leddevice.ko > leddevice.dis
 
 
-#app:
-#	$(TOOLCHAIN)gcc $(APP_NAME) -o $(APP_TARGET)
+app:
+	@$(TOOLCHAIN)gcc $(APP_NAME) -o $(APP_TARGET)
 
 install:
 	#sudo cp $(APP_TARGET) $(NFS_PATH)

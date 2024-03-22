@@ -49,10 +49,17 @@ struct gpioled_dev leddev;
 
 void led_switch(u8 sta)
 {
-	if (sta == LEDON)
-		gpio_set_value(leddev.led_gpio, 0);
-	else if (sta == LEDOFF)
-		gpio_set_value(leddev.led_gpio, 1);
+	u32 val =0;
+
+	val = readl(GPIOI_BSRR_PI);
+	if (sta == LEDON){
+		val |= (1 << 16);
+		writel(val,GPIOI_BSRR_PI);
+	}else if (sta == LEDOFF){
+		val |= (1 << 0);
+		writel(val,GPIOI_BSRR_PI);
+	}
+
 }
 
 static int led_open(struct inode *inode, struct file *filp)
@@ -112,6 +119,8 @@ static int led_probe(struct platform_device *dev)
 	u32 val = 0;
 	int ret = 0;
 	int it = 0;
+
+	printk("led driver and device has matched !\n");
 	for (it = 0; it < 6; it++)
 	{
 		led_resource[it] = platform_get_resource(dev, IORESOURCE_MEM, it);
@@ -140,8 +149,8 @@ static int led_probe(struct platform_device *dev)
 
 	/* output mode */
 	val = readl(GPIOI_MODER_PI);
-	val &= ~(0X3 << 0); /* bit0:1清零 */
-	val |= (0X1 << 0);	/* bit0:1设置01 */
+	val &= ~(0X3 << 0);
+	val |= (0X1 << 0);
 	writel(val, GPIOI_MODER_PI);
 
 	/* push-pull */
@@ -169,6 +178,7 @@ static int led_probe(struct platform_device *dev)
 	if (leddev.major)
 	{
 		leddev.devid = MKDEV(leddev.major, 0);
+		printk("register_chrdev_region !\n");
 		ret = register_chrdev_region(leddev.devid, LEDDEV_CNT, LEDDEV_NAME);
 
 		if (ret < 0)
@@ -180,6 +190,7 @@ static int led_probe(struct platform_device *dev)
 	}
 	else
 	{
+		printk("alloc_chrdev_region !\n");
 		ret = alloc_chrdev_region(&leddev.devid, 0, LEDDEV_CNT, LEDDEV_NAME);
 		if (ret < 0)
 		{
