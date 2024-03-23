@@ -1,0 +1,126 @@
+diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+index 36624234e..5efabbb26 100644
+--- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+@@ -6,6 +6,17 @@
+ #include <dt-bindings/pinctrl/stm32-pinfunc.h>
+ 
+ &pinctrl {
++#if 1
++	led_pins_a: gpioled-0 {
++		pins {
++			pinmux = <STM32_PINMUX('I', 0, GPIO)>;
++			drive-push-pull;
++			bias-pull-up;
++			output-high;
++			slew-rate = <0>;
++		};
++	};
++#endif
+ 	adc1_in6_pins_a: adc1-in6 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('F', 12, ANALOG)>;
+@@ -412,7 +423,9 @@
+ 				 <STM32_PINMUX('H', 13, AF14)>, /* LCD_G2 */
+ 				 <STM32_PINMUX('H', 14, AF14)>, /* LCD_G3 */
+ 				 <STM32_PINMUX('H', 15, AF14)>, /* LCD_G4 */
++#if 0
+ 				 <STM32_PINMUX('I',  0, AF14)>, /* LCD_G5 */
++#endif
+ 				 <STM32_PINMUX('I',  1, AF14)>, /* LCD_G6 */
+ 				 <STM32_PINMUX('I',  2, AF14)>, /* LCD_G7 */
+ 				 <STM32_PINMUX('D',  9, AF14)>, /* LCD_B0 */
+@@ -448,7 +461,9 @@
+ 				 <STM32_PINMUX('H', 13, ANALOG)>, /* LCD_G2 */
+ 				 <STM32_PINMUX('H', 14, ANALOG)>, /* LCD_G3 */
+ 				 <STM32_PINMUX('H', 15, ANALOG)>, /* LCD_G4 */
++#if 0
+ 				 <STM32_PINMUX('I',  0, ANALOG)>, /* LCD_G5 */
++#endif
+ 				 <STM32_PINMUX('I',  1, ANALOG)>, /* LCD_G6 */
+ 				 <STM32_PINMUX('I',  2, ANALOG)>, /* LCD_G7 */
+ 				 <STM32_PINMUX('D',  9, ANALOG)>, /* LCD_B0 */
+diff --git a/arch/arm/boot/dts/stm32mp157d-atk.dts b/arch/arm/boot/dts/stm32mp157d-atk.dts
+index a4f922f35..158589745 100644
+--- a/arch/arm/boot/dts/stm32mp157d-atk.dts
++++ b/arch/arm/boot/dts/stm32mp157d-atk.dts
+@@ -37,6 +37,23 @@
+ 			no-map;
+ 		};
+ 	};
++
++	key {
++		compatible = "alientek,key";
++		status = "okay";
++		key-gpio = <&gpiog 3 GPIO_ACTIVE_LOW>;
++		interrupt-parent = <&gpiog>;
++		interrupts = <3 IRQ_TYPE_EDGE_BOTH>;
++	};
++#if 1
++	gpioled {
++		compatible = "alientek,led";
++		pinctrl_names = "defalut";
++		status = "okay";
++		pinctrl-0 = <&led_pins_a>;
++		led-gpio = <&gpioi 0 GPIO_ACTIVE_LOW>;
++	};
++#endif
+ };
+ 
+ &cpu1 {
+diff --git a/arch/arm/boot/dts/stm32mp157d-atk.dtsi b/arch/arm/boot/dts/stm32mp157d-atk.dtsi
+index b11f359cf..194a1d0cf 100644
+--- a/arch/arm/boot/dts/stm32mp157d-atk.dtsi
++++ b/arch/arm/boot/dts/stm32mp157d-atk.dtsi
+@@ -80,19 +80,20 @@
+ 	gpio-keys {
+ 			compatible = "gpio-keys";
+ 			autorepeat;
+-			key0 {
+-				label = "USER-KEY0";
+-				linux,code = <114>;
+-				gpios = <&gpiog 3 GPIO_ACTIVE_LOW>;
+-				gpio-key,wakeup;
+-			};
+-
+-			key1 {
+-				label = "USER-KEY1";
+-				linux,code = <115>;
+-				gpios = <&gpioh 7 GPIO_ACTIVE_LOW>;
+-				gpio-key,wakeup;
+-			};
++/*
++		key0 {
++			label = "USER-KEY0";
++			linux,code = <114>;
++			gpios = <&gpiog 3 GPIO_ACTIVE_LOW>;
++			gpio-key,wakeup;
++		};
++*/
++		key1 {
++			label = "USER-KEY1";
++			linux,code = <115>;
++			gpios = <&gpioh 7 GPIO_ACTIVE_LOW>;
++			gpio-key,wakeup;
++		};
+ 	};
+ 
+ 	lcd_id {
+@@ -101,7 +102,7 @@
+ 
+ 	leds {
+ 		 compatible = "gpio-leds";
+-
++#if 0
+ 		led1 {
+ 			label = "sys-led";
+ 			gpios = <&gpioi 0 GPIO_ACTIVE_LOW>;
+@@ -109,7 +110,7 @@
+ 			default-state = "on";
+ 			status = "okay";
+ 		};
+-
++#endif
+ 		led2 {
+ 			label = "user-led";
+ 			gpios = <&gpiof 3 GPIO_ACTIVE_LOW>;
