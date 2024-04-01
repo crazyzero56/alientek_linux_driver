@@ -1,0 +1,59 @@
+diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+index 36624234e..fe428c8fe 100644
+--- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+@@ -28,6 +28,16 @@
+ 		};
+ 	};
+ 
++	beep_pins_a: beep_pins {
++		pins {
++			pinmux = <STM32_PINMUX('C', 7, GPIO)>;
++			drive-push-pull;
++			bias-pull-up;
++			output-high;
++			slew-rate = <0>;
++		};
++	};
++
+ 	cec_pins_a: cec-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('A', 15, AF4)>;
+diff --git a/arch/arm/boot/dts/stm32mp157d-atk.dts b/arch/arm/boot/dts/stm32mp157d-atk.dts
+index a4f922f35..600e99ea7 100644
+--- a/arch/arm/boot/dts/stm32mp157d-atk.dts
++++ b/arch/arm/boot/dts/stm32mp157d-atk.dts
+@@ -37,6 +37,14 @@
+ 			no-map;
+ 		};
+ 	};
++
++	beep {
++		compatible = "alientek,beep";
++		status = "okay";
++		pinctrl-names= "default";
++		pinctrl-0 = <&beep_pins_a>;
++		beep-gpio = <&gpioc 7 GPIO_ACTIVE_HIGH>;
++	};
+ };
+ 
+ &cpu1 {
+diff --git a/arch/arm/boot/dts/stm32mp157d-atk.dtsi b/arch/arm/boot/dts/stm32mp157d-atk.dtsi
+index b11f359cf..30a516192 100644
+--- a/arch/arm/boot/dts/stm32mp157d-atk.dtsi
++++ b/arch/arm/boot/dts/stm32mp157d-atk.dtsi
+@@ -117,12 +117,13 @@
+ 			default-state = "on";
+ 			status = "okay";
+ 		};
+-
++#if 0
+ 		beep {
+ 			label = "beep";
+ 			gpios = <&gpioc 7 GPIO_ACTIVE_LOW>;
+ 			default-state = "off";
+ 		};
++#endif
+ 	 };
+ 
+ 	panel_backlight: panel-backlight {

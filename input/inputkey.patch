@@ -1,0 +1,70 @@
+diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+index 36624234e..e53d3c2a7 100644
+--- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+@@ -6,6 +6,22 @@
+ #include <dt-bindings/pinctrl/stm32-pinfunc.h>
+ 
+ &pinctrl {
++
++	key_pins_a: key_pins-0 {
++		pins1 {
++			pinmux = <STM32_PINMUX('G', 3, GPIO)>,
++					 <STM32_PINMUX('H', 7, GPIO)>;
++			bias-pull-up;
++			slew-rate = <0>;
++		};
++
++		pins2 {
++			pinmux = <STM32_PINMUX('A', 0, GPIO)>;
++			bias-pull-down;
++			slew-rate = <0>;
++		};
++	};
++
+ 	adc1_in6_pins_a: adc1-in6 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('F', 12, ANALOG)>;
+diff --git a/arch/arm/boot/dts/stm32mp157d-atk.dts b/arch/arm/boot/dts/stm32mp157d-atk.dts
+index a4f922f35..defd46f4c 100644
+--- a/arch/arm/boot/dts/stm32mp157d-atk.dts
++++ b/arch/arm/boot/dts/stm32mp157d-atk.dts
+@@ -37,6 +37,16 @@
+ 			no-map;
+ 		};
+ 	};
++
++	key {
++		compatible = "alientek,key";
++		status = "okay";
++		pinctrl-names = "default";
++		pinctrl-0 = <&key_pins_a>;
++		key-gpio = <&gpiog 3 GPIO_ACTIVE_LOW>;
++		interrupt-parent = <&gpiog>;
++		interrupts = <3 IRQ_TYPE_EDGE_BOTH>;
++	};
+ };
+ 
+ &cpu1 {
+diff --git a/arch/arm/boot/dts/stm32mp157d-atk.dtsi b/arch/arm/boot/dts/stm32mp157d-atk.dtsi
+index b11f359cf..632b0e888 100644
+--- a/arch/arm/boot/dts/stm32mp157d-atk.dtsi
++++ b/arch/arm/boot/dts/stm32mp157d-atk.dtsi
+@@ -76,7 +76,7 @@
+ 		ds18b20-gpio = <&gpiof 2 GPIO_ACTIVE_LOW>;
+ 		status = "okay";
+ 	};
+-
++#if 0
+ 	gpio-keys {
+ 			compatible = "gpio-keys";
+ 			autorepeat;
+@@ -94,7 +94,7 @@
+ 				gpio-key,wakeup;
+ 			};
+ 	};
+-
++#endif
+ 	lcd_id {
+ 		select_id = <0>;
+ 	};
