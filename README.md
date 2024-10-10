@@ -25,4 +25,3 @@ alientek_linux_driver
    * Base on keyirq, use wait queue API instead of spinlock. CPU usage is decrease.
 12. platform
    * Practice the platform driver and device module proggramming.
-
