@@ -25,3 +25,5 @@ alientek_linux_driver
    * Base on keyirq, use wait queue API instead of spinlock. CPU usage is decrease.
 12. platform
    * Practice the platform driver and device module proggramming.
+13. i2c
+   * Practice I2C driver via coding ap3216c module.

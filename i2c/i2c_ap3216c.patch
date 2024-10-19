@@ -1,0 +1,72 @@
+diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+index 36624234e..f7e0b5366 100644
+--- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+@@ -356,15 +356,15 @@
+ 		};
+ 	};
+ 
+-	i2c5_pins_a: i2c5-0 {
+-		pins {
+-			pinmux = <STM32_PINMUX('A', 11, AF4)>, /* I2C5_SCL */
+-				 <STM32_PINMUX('A', 12, AF4)>; /* I2C5_SDA */
+-			bias-disable;
+-			drive-open-drain;
+-			slew-rate = <0>;
+-		};
+-	};
++	 i2c5_pins_a: i2c5-0 {
++	 	pins {
++	 		pinmux = <STM32_PINMUX('A', 11, AF4)>, /* I2C5_SCL */
++	 			 <STM32_PINMUX('A', 12, AF4)>; /* I2C5_SDA */
++	 		bias-disable;
++	 		drive-open-drain;
++	 		slew-rate = <0>;
++	 	};
++	 };
+ 
+ 	i2c5_pins_sleep_a: i2c5-1 {
+ 		pins {
+diff --git a/arch/arm/boot/dts/stm32mp157d-atk.dts b/arch/arm/boot/dts/stm32mp157d-atk.dts
+index a4f922f35..2ba417682 100644
+--- a/arch/arm/boot/dts/stm32mp157d-atk.dts
++++ b/arch/arm/boot/dts/stm32mp157d-atk.dts
+@@ -51,3 +51,18 @@
+ &optee {
+ 	status = "okay";
+ };
++
++&i2c5 {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&i2c5_pins_a>;
++	pinctrl-1 = <&i2c5_pins_sleep_a>;
++	i2c-scl-rising-time-ns = <100>;
++	i2c-scl-falling-time-ns = <7>;
++	status = "okay";
++
++	ap3216c@1e {
++		compatible = "alientek,ap3216c";
++		reg = <0x1e>;
++	};
++
++};
+\ No newline at end of file
+diff --git a/arch/arm/boot/dts/stm32mp157d-atk.dtsi b/arch/arm/boot/dts/stm32mp157d-atk.dtsi
+index b11f359cf..cee36be9b 100644
+--- a/arch/arm/boot/dts/stm32mp157d-atk.dtsi
++++ b/arch/arm/boot/dts/stm32mp157d-atk.dtsi
+@@ -783,10 +783,10 @@
+ 	/delete-property/dmas;
+ 	/delete-property/dma-names;
+ 
+-	ap3216c@1e {
+-		compatible = "LiteOn,ap3216c";
+-		reg = <0x1e>;
+-	};
++	//ap3216c@1e {
++	//	compatible = "LiteOn,ap3216c";
++	//	reg = <0x1e>;
++	//};
+ 
+ 	ov5640: camera@3c {
+ 		compatible = "ovti,ov5640";
