@@ -27,3 +27,5 @@ alientek_linux_driver
    * Practice the platform driver and device module proggramming.
 13. i2c
    * Practice I2C driver via coding ap3216c module.
+14. SPI
+   * Practice SPI driver via coding icm20608 module.

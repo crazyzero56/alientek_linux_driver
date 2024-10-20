@@ -1,0 +1,59 @@
+diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+index 36624234e..03e9e0c5c 100644
+--- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+@@ -1388,17 +1388,25 @@
+ 
+ 	spi1_pins_a: spi1-0 {
+ 		pins1 {
+-			pinmux = <STM32_PINMUX('Z', 0, AF5)>, /* SPI1_SCK */
+-				 <STM32_PINMUX('Z', 2, AF5)>; /* SPI1_MOSI */
++			pinmux = <STM32_PINMUX('Z', 0, AF5)>,	/* SPI1_SCK */
++					 <STM32_PINMUX('Z', 2, AF5)>;	/* SPI1_MOSI */
+ 			bias-disable;
+ 			drive-push-pull;
+ 			slew-rate = <1>;
+ 		};
+ 
+ 		pins2 {
+-			pinmux = <STM32_PINMUX('Z', 1, AF5)>; /* SPI1_MISO */
++			pinmux = <STM32_PINMUX('Z', 1, AF5)>; 	/* SPI1_MISO */
+ 			bias-disable;
+ 		};
++
++		pins3 {
++			pinmux = <STM32_PINMUX('Z', 3, GPIO)>; 	/* SPI1_NSS */
++			bias-pull-up;
++			output-high;
++			drive-push-pull;
++			slew-rate = <0>;
++		};
+ 	};
+ 
+ 	spi1_sleep_pins_a: spi1-sleep-0 {
+diff --git a/arch/arm/boot/dts/stm32mp157d-atk.dtsi b/arch/arm/boot/dts/stm32mp157d-atk.dtsi
+index b11f359cf..37d7bddf9 100644
+--- a/arch/arm/boot/dts/stm32mp157d-atk.dtsi
++++ b/arch/arm/boot/dts/stm32mp157d-atk.dtsi
+@@ -994,6 +994,21 @@
+ 		pool;
+ 	};
+ };
++#if 1
++&spi1 {
++   pinctrl-names = "default", "sleep";
++   pinctrl-0 = <&spi1_pins_a>;
++   pinctrl-1 = <&spi1_sleep_pins_a>;
++   cs-gpios = <&gpioz 3 GPIO_ACTIVE_LOW>;
++   status = "okay";
++
++	spidev: icm20608@0 {
++		compatible = "alientek,icm20608";
++		reg = <0>;			/* CS #0 */
++		spi-max-frequency = <8000000>;
++	};
++};
++#endif
+ 
+ &spi1 {
+    pinctrl-names = "default", "sleep";
